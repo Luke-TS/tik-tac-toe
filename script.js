@@ -1,6 +1,10 @@
 const board = document.getElementById('board');
 
-let winConditions = getWinConditions(3, 3, 3);
+let horizWin = getWinConditions(3, 3, 3); // includes major diag
+let vertWin = []; // includes minor diag
+horizWin.forEach(cond => {
+    vertWin.push(rotate(cond));
+})
 let availableSelections = createArray(3, 3, 1);
 let p1Data = createArray(3, 3, 0);
 let p2Data = createArray(3, 3, 0);
@@ -13,17 +17,44 @@ function makeGrid(dim) {
         for(let col = 0; col < dim; col++) {
             const square = document.createElement('button');
             square.addEventListener('click', () => {
-                const valid = validateChoice(row, col);
-                if (valid) {
+                if (validateChoice(row, col)) {
                     storeData(row, col);
+                    const win = checkForWin(row, col);
+                    if (win) {console.log('WINNER')};
                     switchTurn();
-                    displayData();
                 }
             })
             container.appendChild(square);
         }
         board.appendChild(container);
     }
+}
+
+function checkForWin(r, c) {
+    let win = [1, 1, 1, 1];
+    let data = p1TurnBool ? p1Data : p2Data;
+    const potentialWins = [
+        horizWin[r],
+        vertWin[c],
+        horizWin[horizWin.length-1],
+        vertWin[vertWin.length-1]
+    ]
+    console.log(potentialWins);
+    potentialWins.forEach((cond, index) => {
+
+        for(let i = 0; i < 3; i++) {
+            for(let j = 0; j < 3; j++) {
+                if(cond[i][j] && !data[i][j]) {
+                    win[index] = 0;
+                }
+            }
+        }
+    })
+    console.log(win);
+    if (win.includes(1)) {
+        return true;
+    }
+    return false;
 }
 
 function getWinConditions(rows, columns, len) {
@@ -39,16 +70,14 @@ function getWinConditions(rows, columns, len) {
             if (i == j) {identityMat[i][j] = 1;};
         }
         allWinConditions.push(horizCond);
-        allWinConditions.push(transposeArr(horizCond));
     }
     allWinConditions.push(identityMat);
-    allWinConditions.push(rotate(identityMat));
 
     return allWinConditions;
 }
 
 function rotate(arr) {
-    return arr[0].map((_, index) => arr.map(row => row[index]).reverse())
+    return arr[0].map((val, index) => arr.map(row => row[row.length-1-index]));
 }
 
 function transposeArr(arr) {
