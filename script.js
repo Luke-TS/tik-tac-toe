@@ -19,6 +19,7 @@ function makeGrid(dim) {
             square.addEventListener('click', () => {
                 if (validateChoice(row, col)) {
                     storeData(row, col);
+                    markLocation(square);
                     const win = checkForWin(row, col);
                     if (win) {console.log('WINNER')};
                     switchTurn();
@@ -74,6 +75,14 @@ function getWinConditions(rows, columns, len) {
     allWinConditions.push(identityMat);
 
     return allWinConditions;
+}
+
+function markLocation(docElement) {
+    if (p1TurnBool) {
+        docElement.textContent = 'X';
+    } else {
+        docElement.textContent = 'O';
+    }
 }
 
 function rotate(arr) {
