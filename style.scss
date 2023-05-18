@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#board {
+    height: 500px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+
+    div {
+        display: flex;
+        flex: 1;
+
+        button {
+            flex: 1;
+        }
+    }
+}

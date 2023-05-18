@@ -1,0 +1,21 @@
+This file contains a brainstorm of development steps.
+
+tic-tak-toe:
+- create basic gui
+    - grid of buttons
+        - use code from previous etch-a-sketch-project
+    - add button functionality
+        - should return location data to corresponding play
+
+- variables and data
+    - create 2d arrays for each player
+        - arrays correspond to board layout
+    - create some array to store available spaces
+        - user inputs should be checked before adding
+    - array of win-conditions
+        - should contain all possibilities
+        - will need an algorithm to expand to larger boards
+
+- checking for wins
+    - function should be checked after every button press
+    - should look for win conditions within user data
