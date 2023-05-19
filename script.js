@@ -1,3 +1,4 @@
+const body = document.querySelector('body');
 const board = document.getElementById('board');
 
 let horizWin = getWinConditions(3, 3, 3); // includes major diag
@@ -16,12 +17,28 @@ function makeGrid(dim) {
 
         for(let col = 0; col < dim; col++) {
             const square = document.createElement('button');
+            square.classList.add('square');
             square.addEventListener('click', () => {
                 if (validateChoice(row, col)) {
                     storeData(row, col);
                     markLocation(square);
                     const win = checkForWin(row, col);
-                    if (win) {console.log('WINNER')};
+                    console.log(win);
+                    if (win) {
+                        console.log(p1TurnBool);
+                        if(p1TurnBool) {
+                            console.log('test');
+                            display('player 1 wins!');
+                        }
+                        else {
+                            display('player two wins!');
+                        }
+                        reset();
+                    }
+                    else if (!availableSelections.flat().includes(1)) {
+                        display('Tie!');
+                        reset();
+                    } else {display('')}
                     switchTurn();
                 }
             })
@@ -29,6 +46,26 @@ function makeGrid(dim) {
         }
         board.appendChild(container);
     }
+}
+
+function reset() {
+    horizWin = getWinConditions(3, 3, 3); // includes major diag
+    vertWin = []; // includes minor diag
+    horizWin.forEach(cond => {
+        vertWin.push(rotate(cond));
+    })
+    availableSelections = createArray(3, 3, 1);
+    p1Data = createArray(3, 3, 0);
+    p2Data = createArray(3, 3, 0);
+    p1TurnBool = true; // indicates player turn
+    const squares = [...document.querySelectorAll('.square')];
+    squares.forEach(e => e.textContent = '');
+
+}
+
+const result = document.getElementById('result');
+function display(str) {
+    result.textContent = str;
 }
 
 function checkForWin(r, c) {
@@ -40,7 +77,6 @@ function checkForWin(r, c) {
         horizWin[horizWin.length-1],
         vertWin[vertWin.length-1]
     ]
-    console.log(potentialWins);
     potentialWins.forEach((cond, index) => {
 
         for(let i = 0; i < 3; i++) {
@@ -51,7 +87,6 @@ function checkForWin(r, c) {
             }
         }
     })
-    console.log(win);
     if (win.includes(1)) {
         return true;
     }
